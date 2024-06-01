@@ -71,3 +71,15 @@ group :test do
   gem "webdrivers"
 
 end
+
+
+gem 'capistrano'
+
+gem 'capistrano-rails'
+
+gem 'capistrano-bundler'
+
+# gem 'capistrano-rbenv'
+gem 'capistrano-rvm'
+
+gem 'capistrano3-puma'
