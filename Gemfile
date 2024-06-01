@@ -83,3 +83,4 @@ gem 'capistrano-bundler'
 gem 'capistrano-rvm'
 
 gem 'capistrano3-puma'
+gem 'capistrano-chruby'
