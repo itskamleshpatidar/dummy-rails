@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.7.3"
+ruby "2.7.8"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.8", ">= 7.0.8.1"
@@ -79,8 +79,11 @@ gem 'capistrano-rails'
 
 gem 'capistrano-bundler'
 
-# gem 'capistrano-rbenv'
-gem 'capistrano-rvm'
+gem 'capistrano-rbenv'
+# gem 'capistrano-rvm'
 
 gem 'capistrano3-puma'
 gem 'capistrano-chruby'
+
+# gem 'therubyracer'
+gem 'execjs'
