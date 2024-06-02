@@ -9,7 +9,7 @@ set :repo_url, "git@github.com:itskamleshpatidar/dummy-rails.git"
 set :branch, 'main'
 
 # Default deploy_to directory is /var/www/dummy-rails
-set :deploy_to, "/var/www/dummy-rails"
+set :deploy_to, "/var/www"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -19,13 +19,13 @@ set :deploy_to, "/var/www/dummy-rails"
 # set :format_options, command_output: true, log_file: "log/capistrano.log", color: :auto, truncate: :auto
 
 # Default value for :pty is false
-set :pty, true
+# set :pty, true
 
 # Default value for :linked_files is []
 append :linked_files, "config/database.yml", 'config/master.key'
 
 # Default value for linked_dirs is []
-append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system", "vendor", "storage"
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor", "storage"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -39,7 +39,7 @@ set :keep_releases, 2
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 
-
+set :rbenv_ruby, '2.7.8'
 set :use_sudo, true
 set :rails_env, 'production'
 
@@ -62,4 +62,44 @@ namespace :puma do
     end
   end
   before :start, :make_dirs
+end
+
+
+namespace :deploy do
+  desc 'Upload database.yml'
+  task :upload_database_yml do
+    on roles(:app) do
+      unless test("[ -f #{shared_path}/config/database.yml ]")
+        upload! 'config/database.yml', "#{shared_path}/config/database.yml"
+      end
+    end
+  end
+
+  before :starting, :upload_database_yml
+end
+
+namespace :deploy do
+  desc 'Upload master.key'
+  task :upload_master_key do
+    on roles(:app) do
+      unless test("[ -f #{shared_path}/config/master.key ]")
+        upload! 'config/master.key', "#{shared_path}/config/master.key"
+      end
+    end
+  end
+
+  before :starting, :upload_master_key
+end
+
+set :use_sudo, true
+
+namespace :deploy do
+  desc 'Create release directory with sudo'
+  task :create_release_dir_with_sudo do
+    on roles(:app) do
+      execute :sudo, "mkdir -p #{release_path}"
+    end
+  end
+
+  before 'deploy:updating', 'deploy:create_release_dir_with_sudo'
 end
