@@ -25,7 +25,7 @@ set :deploy_to, "/var/www"
 append :linked_files, "config/database.yml", 'config/master.key'
 
 # Default value for linked_dirs is []
-append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor", "storage"
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public", "vendor", "storage"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -38,9 +38,12 @@ set :keep_releases, 2
 
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
+# set :bundle_bins, fetch(:bundle_bins, []).push("bundler:2.3.11")
 
-set :rbenv_ruby, '2.7.8'
+set :rvm_ruby_version, '2.7.8'
+# set :rbenv_ruby, '2.7.8'
 set :use_sudo, true
+set :assets_roles, []
 set :rails_env, 'production'
 
 set :puma_bind,       "unix://#{shared_path}/tmp/sockets/#{fetch(:application)}-puma.sock"
@@ -101,5 +104,26 @@ namespace :deploy do
     end
   end
 
-  before 'deploy:updating', 'deploy:create_release_dir_with_sudo'
+  # desc 'Start Puma'
+  # task :start do
+  #   on roles(:app) do
+  #     within release_path do
+  #       with rails_env: fetch(:rails_env) do
+  #         execute :bundle, "exec puma -C #{shared_path}/puma.rb"
+  #       end
+  #     end
+  #   end
+  # end
+
+  # after 'deploy:publishing', 'deploy:start'
+end
+
+namespace :nginx do
+  desc 'Restart Nginx'
+  task :restart do
+    on roles(:web) do
+      execute :sudo, :systemctl, :restart, :nginx
+    end
+  end
+  after 'deploy:finished', 'nginx:restart'
 end
