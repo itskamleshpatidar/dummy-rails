@@ -25,7 +25,7 @@ set :deploy_to, "/var/www"
 append :linked_files, "config/database.yml", 'config/master.key'
 
 # Default value for linked_dirs is []
-append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public", "vendor", "storage"
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system", "vendor", "storage"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -34,16 +34,17 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public", "v
 # set :local_user, -> { `git config user.name`.chomp }
 
 # Default value for keep_releases is 5
-set :keep_releases, 2
+# set :keep_releases, 2
 
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 # set :bundle_bins, fetch(:bundle_bins, []).push("bundler:2.3.11")
 
 set :rvm_ruby_version, '3.2.2'
+
 # set :rbenv_ruby, '2.7.8'
 set :use_sudo, true
-set :assets_roles, []
+# set :assets_roles, []
 set :rails_env, 'production'
 
 set :puma_bind,       "unix://#{shared_path}/tmp/sockets/#{fetch(:application)}-puma.sock"
@@ -68,41 +69,41 @@ namespace :puma do
 end
 
 
-namespace :deploy do
-  desc 'Upload database.yml'
-  task :upload_database_yml do
-    on roles(:app) do
-      unless test("[ -f #{shared_path}/config/database.yml ]")
-        upload! 'config/database.yml', "#{shared_path}/config/database.yml"
-      end
-    end
-  end
+# namespace :deploy do
+#   desc 'Upload database.yml'
+#   task :upload_database_yml do
+#     on roles(:app) do
+#       unless test("[ -f #{shared_path}/config/database.yml ]")
+#         upload! 'config/database.yml', "#{shared_path}/config/database.yml"
+#       end
+#     end
+#   end
 
-  before :starting, :upload_database_yml
-end
+#   before :starting, :upload_database_yml
+# end
 
-namespace :deploy do
-  desc 'Upload master.key'
-  task :upload_master_key do
-    on roles(:app) do
-      unless test("[ -f #{shared_path}/config/master.key ]")
-        upload! 'config/master.key', "#{shared_path}/config/master.key"
-      end
-    end
-  end
+# namespace :deploy do
+#   desc 'Upload master.key'
+#   task :upload_master_key do
+#     on roles(:app) do
+#       unless test("[ -f #{shared_path}/config/master.key ]")
+#         upload! 'config/master.key', "#{shared_path}/config/master.key"
+#       end
+#     end
+#   end
 
-  before :starting, :upload_master_key
-end
+#   before :starting, :upload_master_key
+# end
 
-set :use_sudo, true
+# set :use_sudo, true
 
-namespace :deploy do
-  desc 'Create release directory with sudo'
-  task :create_release_dir_with_sudo do
-    on roles(:app) do
-      execute :sudo, "mkdir -p #{release_path}"
-    end
-  end
+# namespace :deploy do
+#   desc 'Create release directory with sudo'
+#   task :create_release_dir_with_sudo do
+#     on roles(:app) do
+#       execute :sudo, "mkdir -p #{release_path}"
+#     end
+#   end
 
   # desc 'Start Puma'
   # task :start do
@@ -118,12 +119,12 @@ namespace :deploy do
   # after 'deploy:publishing', 'deploy:start'
 end
 
-namespace :nginx do
-  desc 'Restart Nginx'
-  task :restart do
-    on roles(:web) do
-      execute :sudo, :systemctl, :restart, :nginx
-    end
-  end
-  after 'deploy:finished', 'nginx:restart'
-end
+# namespace :nginx do
+#   desc 'Restart Nginx'
+#   task :restart do
+#     on roles(:web) do
+#       execute :sudo, :systemctl, :restart, :nginx
+#     end
+#   end
+#   after 'deploy:finished', 'nginx:restart'
+# end
