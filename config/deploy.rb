@@ -40,7 +40,7 @@ set :keep_releases, 2
 # set :ssh_options, verify_host_key: :secure
 # set :bundle_bins, fetch(:bundle_bins, []).push("bundler:2.3.11")
 
-set :rvm_ruby_version, '2.7.8'
+set :rvm_ruby_version, '3.2.2'
 # set :rbenv_ruby, '2.7.8'
 set :use_sudo, true
 set :assets_roles, []
