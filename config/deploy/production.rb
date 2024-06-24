@@ -61,4 +61,4 @@
 #   }
 
 
-server '54.79.249.133', user: 'ubuntu', roles: %w{web app db}
+server '3.25.62.91', user: 'ubuntu', roles: %w{web app db}

@@ -9,7 +9,7 @@ set :repo_url, "git@github.com:itskamleshpatidar/dummy-rails.git"
 set :branch, 'main'
 
 # Default deploy_to directory is /var/www/dummy-rails
-set :deploy_to, "/var/www"
+set :deploy_to, "/var/www/dummy-rails"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -68,6 +68,21 @@ namespace :puma do
   before :start, :make_dirs
 end
 
+namespace :deploy do
+  before :starting, :check_files do
+    on roles(:all) do
+      unless test("[ -f #{shared_path}/config/database.yml ]")
+        upload! 'config/database.yml', "#{shared_path}/config/database.yml"
+      end
+
+      unless test("[ -f #{shared_path}/config/master.key ]")
+        upload! 'config/master.key', "#{shared_path}/config/master.key"
+      end
+    end
+  end
+end
+
+
 
 # namespace :deploy do
 #   desc 'Upload database.yml'
@@ -117,7 +132,7 @@ end
   # end
 
   # after 'deploy:publishing', 'deploy:start'
-end
+# end
 
 # namespace :nginx do
 #   desc 'Restart Nginx'

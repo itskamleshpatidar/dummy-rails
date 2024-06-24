@@ -44,11 +44,11 @@ plugin :tmp_restart
 
 
 # Add control app and state file configurations
-state_path "/var/www/shared/tmp/pids/puma.state"
-stdout_redirect "/var/www/shared/log/puma.stdout.log", "/var/www/shared/log/puma.stderr.log", true
+state_path "/var/www/dummy-rails/shared/tmp/pids/puma.state"
+stdout_redirect "/var/www/dummy-rails/shared/log/puma.stdout.log", "/var/www/shared/log/puma.stderr.log", true
 
 # Daemonize the server
 daemonize true
 
 # Control app
-activate_control_app 'unix:///var/www/shared/tmp/sockets/dummy-rails-puma.sock'
+activate_control_app 'unix:///var/www/dummy-rails/shared/tmp/sockets/dummy-rails-puma.sock'
